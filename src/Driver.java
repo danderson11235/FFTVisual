@@ -22,7 +22,7 @@ public class Driver {
         Complex[][] complexCanvas = new Complex[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                Color c = new Color(canvas[height * i + j]);
+                Color c = new Color(canvas[(width * i) + j]);
                 double real = (float)Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null)[2];
                 complexCanvas[i][j] = new Complex((real / height), 0);
             }
@@ -40,7 +40,7 @@ public class Driver {
                 brightness = 1.0f;
                 hue = (float)outComplexCanvas[i][j].phase();
                 saturation = (float)outComplexCanvas[i][j].abs();
-                outCanvas[i * height + j] = Color.HSBtoRGB(hue, saturation, brightness);
+                outCanvas[i * width + j] = Color.HSBtoRGB(hue, saturation, brightness);
             }
         }
 
