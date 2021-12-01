@@ -107,6 +107,10 @@ public class Complex {
         return a.times(b.reciprocal());
     }
 
+    public Complex divideBy(double denom) {
+        return new Complex(re / denom, im / denom);
+    }
+
     // return a new Complex object whose value is the complex exponential of this
     public Complex exp() {
         return new Complex(Math.exp(re) * Math.cos(im), Math.exp(re) * Math.sin(im));

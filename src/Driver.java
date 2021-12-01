@@ -29,9 +29,9 @@ public class Driver {
         }
         // get the fft of each row and write its value as mag and hue as rotation note 100% saturation
         Complex[][] outComplexCanvas = new Complex[height][width];
-        for (int i = 0; i < height; i++) {
-            outComplexCanvas[i] = FFT.fft(complexCanvas[i]);
-        }
+        
+        if (args[3] == "-l") lateralFFT(height, complexCanvas, outComplexCanvas);
+        else radialFT(height, complexCanvas, outComplexCanvas);
 
         int[] outCanvas = new int[height * width];
         for (int i = 0; i < height; i++) {
@@ -47,5 +47,32 @@ public class Driver {
         // handles output
         outImg.setRGB(0, 0, width, height, outCanvas, 0, width);
         ImageIO.write(outImg, args[2], new File(args[1]));
+    }
+
+    public static void lateralFFT(int height, Complex[][] complexCanvas, Complex[][] outComplexCanvas) {
+        for (int i = 0; i < height; i++) {
+            outComplexCanvas[i] = FFT.fft(complexCanvas[i]);
+        }
+    }
+
+    public static void radialFT(int height, Complex[][] complexCanvas, Complex[][] outComplexCanvas) {
+        Complex negi2pi = new Complex(0, -2 * Math.PI);
+        Complex e = new Complex(Math.E, 0);
+        for (int k = 0; k < height; k++) {
+            for (int l = 0; l < height; l++) { // these handle looping over F(k,l)
+                Complex sum = new Complex(0, 0);
+                for (int i = 0; i < height; i++) {
+                    for (int j = 0; j < height; j++) {
+                        Complex temp = new Complex((k*i + j*l), 0);
+                        temp = temp.divideBy(height);
+                        temp = temp.times(negi2pi);
+                        temp = temp.exp();
+                        temp = temp.times(complexCanvas[i][j]);
+                        sum = Complex.plus(temp, sum);
+                    }
+                }
+                outComplexCanvas[k][l] = sum;
+            }
+        }
     }
 }
